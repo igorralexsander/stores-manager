@@ -53,3 +53,18 @@ func (cm *configManager) GetServerConfig() ServerConfig {
 		Host: vipServerConfig.GetString("host"),
 	}
 }
+
+func (cm *configManager) GetDatabaseConfig() DatabaseConfig {
+	vipDatabaseConfig := cm.vip.Sub("database")
+	return DatabaseConfig{
+		Hosts:          vipDatabaseConfig.GetStringSlice("hosts"),
+		Port:           vipDatabaseConfig.GetInt("port"),
+		ConnectTimeout: vipDatabaseConfig.GetDuration("connectTimeout"),
+		ReadTimeout:    vipDatabaseConfig.GetDuration("readTimeout"),
+		KeySpace:       vipDatabaseConfig.GetString("keyspace"),
+		Retries:        vipDatabaseConfig.GetInt("retries"),
+		User:           vipDatabaseConfig.GetString("user"),
+		Password:       vipDatabaseConfig.GetString("password"),
+		MaxConnections: vipDatabaseConfig.GetInt("maxConnections"),
+	}
+}

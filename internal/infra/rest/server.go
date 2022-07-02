@@ -26,5 +26,4 @@ func (s *Server) CreateHttpServer() *echo.Echo {
 func (s *Server) Start(server *echo.Echo, host string) {
 	log.Info(fmt.Sprintf("Starting http server at http://%s", host))
 	log.Warn(server.Start(host), "Stopping application....")
-
 }
