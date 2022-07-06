@@ -1,16 +1,16 @@
 package routes
 
 import (
-	"github.com/igorralexsander/stores-manager/internal/infra/repository_impl"
+	"github.com/igorralexsander/stores-manager/internal/data/repository"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type Health struct {
-	dbChecker repository_impl.DBStatus
+	dbChecker repository.DBStatus
 }
 
-func NewHealth(dbChecker repository_impl.DBStatus) *Health {
+func NewHealth(dbChecker repository.DBStatus) *Health {
 	return &Health{dbChecker: dbChecker}
 }
 

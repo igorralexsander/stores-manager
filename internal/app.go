@@ -1,22 +1,22 @@
 package internal
 
 import (
+	dataModule "github.com/igorralexsander/stores-manager/internal/data/module"
 	serviceModule "github.com/igorralexsander/stores-manager/internal/domain/module"
-	"github.com/igorralexsander/stores-manager/internal/infra/config"
 	infraModule "github.com/igorralexsander/stores-manager/internal/infra/module"
 	"github.com/igorralexsander/stores-manager/internal/infra/rest/routes"
 	"github.com/labstack/echo/v4"
 )
 
 type App struct {
-	serviceModule    *serviceModule.ServiceModule
-	restModule       *infraModule.RestModule
-	clientsModule    *infraModule.ClientsModule
-	repositoryModule *infraModule.RepositoryModule
+	serviceModule    *serviceModule.Service
+	restModule       *infraModule.Rest
+	clientsModule    *dataModule.Clients
+	repositoryModule *dataModule.Repository
 	routes           []routes.Base
 }
 
-func NewApplication(serviceModule *serviceModule.ServiceModule, restModule *infraModule.RestModule, clientsModule *infraModule.ClientsModule, repositoryModule *infraModule.RepositoryModule) *App {
+func NewApplication(serviceModule *serviceModule.Service, restModule *infraModule.Rest, clientsModule *dataModule.Clients, repositoryModule *dataModule.Repository) *App {
 	instance := App{
 		serviceModule:    serviceModule,
 		restModule:       restModule,
@@ -40,8 +40,7 @@ func (a *App) provideStoreRoute() *routes.Store {
 }
 
 func (a *App) provideHealthRoute() *routes.Health {
-	scyllaClient := a.clientsModule.ProvideScyllaClient(config.Instance().GetDatabaseScyllaConfig())
-	dbChecker := a.repositoryModule.ProvideDbChecker(scyllaClient)
+	dbChecker := a.repositoryModule.ProvideDbChecker()
 	return routes.NewHealth(dbChecker)
 }
 

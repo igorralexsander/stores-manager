@@ -1,8 +1,8 @@
-package repository_impl
+package repository
 
 import (
 	"context"
-	"github.com/igorralexsander/stores-manager/internal/infra/clients/scylladb"
+	"github.com/igorralexsander/stores-manager/internal/data/clients/scylladb"
 	"time"
 )
 

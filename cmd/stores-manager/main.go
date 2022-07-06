@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/igorralexsander/stores-manager/internal"
+	"github.com/igorralexsander/stores-manager/internal/data/module"
 	serviceModule "github.com/igorralexsander/stores-manager/internal/domain/module"
 	"github.com/igorralexsander/stores-manager/internal/infra/config"
 	infraModule "github.com/igorralexsander/stores-manager/internal/infra/module"
@@ -17,13 +18,13 @@ import (
 )
 
 func main() {
-	clientsMod := infraModule.NewClientsModule()
-	repositoryMod := infraModule.NewRepoistoryModule()
+	clientsMod := module.NewClientsModule()
 	scyllaClient := clientsMod.ProvideScyllaClient(config.Instance().GetDatabaseScyllaConfig())
 	if err := scyllaClient.Connect(); err != nil {
 		log.Error(err, "Failed to connect in scylladb")
 	}
 
+	repositoryMod := module.NewRepoistoryModule(scyllaClient)
 	servicesMod := serviceModule.NewServiceModule()
 	restMod := infraModule.NewRestModule()
 
