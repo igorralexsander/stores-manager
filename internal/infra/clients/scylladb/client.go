@@ -11,12 +11,13 @@ type Client struct {
 }
 
 func newScyllaDbClient(clusterConfig *gocql.ClusterConfig) *Client {
-	return &Client{clusterConfig: clusterConfig}
+	instance := &Client{clusterConfig: clusterConfig}
+	return instance
 }
 
-func (db *Client) connect(clusterConfig gocql.ClusterConfig) error {
+func (db *Client) Connect() error {
 	if db.session == nil {
-		if scyllaSession, err := gocqlx.WrapSession(gocql.NewSession(clusterConfig)); err != nil {
+		if scyllaSession, err := gocqlx.WrapSession(gocql.NewSession(*db.clusterConfig)); err != nil {
 			return err
 		} else {
 			db.session = &scyllaSession
@@ -27,5 +28,8 @@ func (db *Client) connect(clusterConfig gocql.ClusterConfig) error {
 }
 
 func (db *Client) GetSession() *gocqlx.Session {
+	if db.session == nil || db.session.Closed() {
+		db.Connect()
+	}
 	return db.session
 }

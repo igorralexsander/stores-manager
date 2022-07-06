@@ -8,4 +8,7 @@ createkeyspace:
 migrationup:
 	migrate -path db/migration -database "cassandra://127.0.0.1:9042/marketplace_analytics_stores?username=cassandra&password=cassandra"  -verbose up
 
+buildimage:
+	docker build -t stores-manager  -f  ./package/docker/Dockerfile .
+
 .PHONY: migrationup

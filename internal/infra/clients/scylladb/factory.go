@@ -15,8 +15,10 @@ func makeClusterConfig(config *config.DatabaseConfig) *gocql.ClusterConfig {
 	clusterConfig.Timeout = config.ReadTimeout
 	clusterConfig.NumConns = config.MaxConnections
 	clusterConfig.Keyspace = config.KeySpace
-	clusterConfig.Port = config.Port
-	clusterConfig.Consistency = gocql.One
+	clusterConfig.DisableInitialHostLookup = true
+	//clusterConfig.Port = config.Port
+	clusterConfig.Consistency = gocql.Quorum
+	clusterConfig.ProtoVersion = 4
 	clusterConfig.PoolConfig.HostSelectionPolicy = gocql.TokenAwareHostPolicy(gocql.RoundRobinHostPolicy())
 	clusterConfig.RetryPolicy = &gocql.SimpleRetryPolicy{
 		NumRetries: config.Retries,

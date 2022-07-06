@@ -6,7 +6,7 @@ import (
 	"github.com/igorralexsander/stores-manager/internal"
 	serviceModule "github.com/igorralexsander/stores-manager/internal/domain/module"
 	"github.com/igorralexsander/stores-manager/internal/infra/config"
-	restModule "github.com/igorralexsander/stores-manager/internal/infra/module"
+	infraModule "github.com/igorralexsander/stores-manager/internal/infra/module"
 	"github.com/igorralexsander/stores-manager/internal/infra/rest"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -17,10 +17,17 @@ import (
 )
 
 func main() {
-	servicesMod := serviceModule.NewServiceModule()
-	restMod := restModule.NewRestModule()
+	clientsMod := infraModule.NewClientsModule()
+	repositoryMod := infraModule.NewRepoistoryModule()
+	scyllaClient := clientsMod.ProvideScyllaClient(config.Instance().GetDatabaseScyllaConfig())
+	if err := scyllaClient.Connect(); err != nil {
+		log.Error(err, "Failed to connect in scylladb")
+	}
 
-	application := internal.NewApplication(servicesMod, restMod)
+	servicesMod := serviceModule.NewServiceModule()
+	restMod := infraModule.NewRestModule()
+
+	application := internal.NewApplication(servicesMod, restMod, clientsMod, repositoryMod)
 
 	apiServer := rest.NewServer(application)
 

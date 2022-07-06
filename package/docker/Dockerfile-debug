@@ -1,0 +1,21 @@
+# Compile stage
+FROM golang:1.18.3 AS build-env
+
+# Build Delve
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+ADD . /stores-manager
+WORKDIR /stores-manager
+RUN ls
+RUN go build -gcflags="all=-N -l" -o stores-manager cmd/stores-manager/main.go
+
+# Final stage
+FROM debian:buster
+
+EXPOSE 8080 40000
+
+WORKDIR /
+COPY --from=build-env /go/bin/dlv /
+COPY --from=build-env /stores-manager /
+
+CMD ["/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/stores-manager"]

@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/labstack/gommon/log"
 	"github.com/spf13/viper"
+	"time"
 )
 
 var (
@@ -18,7 +19,6 @@ func Instance() *configManager {
 		vip := viper.New()
 		vip.SetConfigName("config")
 		vip.AddConfigPath(".")
-		vip.AddConfigPath("./config")
 
 		if err := vip.ReadInConfig(); err != nil {
 			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
@@ -39,28 +39,28 @@ func setDefaults(vip *viper.Viper) {
 	vip.SetDefault("app.logLevel", "info")
 }
 
-func (cm *configManager) GetAppConfig() AppConfig {
+func (cm *configManager) GetAppConfig() *AppConfig {
 	vipAppConfig := cm.vip.Sub("app")
-	return AppConfig{
+	return &AppConfig{
 		Name:     vipAppConfig.GetString("name"),
 		LogLevel: vipAppConfig.GetString("logLevel"),
 	}
 }
 
-func (cm *configManager) GetServerConfig() ServerConfig {
+func (cm *configManager) GetServerConfig() *ServerConfig {
 	vipServerConfig := cm.vip.Sub("server")
-	return ServerConfig{
+	return &ServerConfig{
 		Host: vipServerConfig.GetString("host"),
 	}
 }
 
-func (cm *configManager) GetDatabaseConfig() DatabaseConfig {
-	vipDatabaseConfig := cm.vip.Sub("database")
-	return DatabaseConfig{
+func (cm *configManager) GetDatabaseScyllaConfig() *DatabaseConfig {
+	vipDatabaseConfig := cm.vip.Sub("database").Sub("scylla")
+	return &DatabaseConfig{
 		Hosts:          vipDatabaseConfig.GetStringSlice("hosts"),
 		Port:           vipDatabaseConfig.GetInt("port"),
-		ConnectTimeout: vipDatabaseConfig.GetDuration("connectTimeout"),
-		ReadTimeout:    vipDatabaseConfig.GetDuration("readTimeout"),
+		ConnectTimeout: vipDatabaseConfig.GetDuration("connectTimeout") * time.Second,
+		ReadTimeout:    vipDatabaseConfig.GetDuration("readTimeout") * time.Second,
 		KeySpace:       vipDatabaseConfig.GetString("keyspace"),
 		Retries:        vipDatabaseConfig.GetInt("retries"),
 		User:           vipDatabaseConfig.GetString("user"),

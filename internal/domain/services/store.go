@@ -19,10 +19,8 @@ type Repository interface {
 	GetByName(name string) (model.Store, error)
 }
 
-func NewStoreService(repository Repository) *storeService {
-	return &storeService{
-		repository: repository,
-	}
+func NewStoreService() *storeService {
+	return &storeService{}
 }
 
 func (s *storeService) Create(store model.Store) error {
