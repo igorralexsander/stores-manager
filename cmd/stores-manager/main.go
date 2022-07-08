@@ -9,8 +9,8 @@ import (
 	"github.com/igorralexsander/stores-manager/internal/infra/config"
 	infraModule "github.com/igorralexsander/stores-manager/internal/infra/module"
 	"github.com/igorralexsander/stores-manager/internal/infra/rest"
+	"github.com/igorralexsander/stores-manager/internal/infra/utils/log"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,10 +18,12 @@ import (
 )
 
 func main() {
+	log.InitLogger()
+
 	clientsMod := module.NewClientsModule()
 	scyllaClient := clientsMod.ProvideScyllaClient(config.Instance().GetDatabaseScyllaConfig())
 	if err := scyllaClient.Connect(); err != nil {
-		log.Error(err, "Failed to connect in scylladb")
+		log.Logger.Error(err.Error())
 	}
 
 	repositoryMod := module.NewRepoistoryModule(scyllaClient)
@@ -37,7 +39,6 @@ func main() {
 	go apiServer.Start(httpServer, config.Instance().GetServerConfig().Host)
 
 	shutDownHook(httpServer)
-
 }
 
 func shutDownHook(apiServer *echo.Echo) {
@@ -47,19 +48,19 @@ func shutDownHook(apiServer *echo.Echo) {
 	switch <-quit {
 	case os.Interrupt, syscall.SIGTERM:
 
-		log.Info("Initialize Gracefully shutdown")
+		log.Logger.Info("Initialize Gracefully shutdown")
 
-		log.Info(fmt.Sprintf("Wait %d seconds to process pending requests", 10))
+		log.Logger.Info(fmt.Sprintf("Wait %d seconds to process pending requests", 10))
 		time.Sleep(10 * time.Second)
 
 		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()
 
-		log.Info("Shutdown HTTP server...")
+		log.Logger.Info("Shutdown HTTP server...")
 		if err := apiServer.Shutdown(ctx); err != nil {
-			log.Fatal(err, "Error to gracefully stop application, application stopped.")
+			log.Logger.Error(err.Error() + "Error to gracefully stop application, application stopped.")
 		}
-		log.Info("Complete Gracefully shutdown")
+		log.Logger.Info("Complete Gracefully shutdown")
 	}
 
 }
