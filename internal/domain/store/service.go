@@ -8,8 +8,10 @@ import (
 
 type Service interface {
 	Create(ctx context.Context, store model.Store) error
+	Delete(ctx context.Context, id uuid.UUID) error
 	FindById(ctx context.Context, id uuid.UUID) (*model.Store, error)
 	FindAll(ctx context.Context) (model.Stores, error)
+	FindByGroup(ctx context.Context, groupName string) (model.Stores, error)
 }
 
 type service struct {
@@ -37,4 +39,12 @@ func (s *service) FindById(ctx context.Context, id uuid.UUID) (*model.Store, err
 
 func (s *service) FindAll(ctx context.Context) (model.Stores, error) {
 	return s.repository.GetAll(ctx)
+}
+
+func (s *service) Delete(ctx context.Context, id uuid.UUID) error {
+	return s.repository.Delete(ctx, id)
+}
+
+func (s *service) FindByGroup(ctx context.Context, groupName string) (model.Stores, error) {
+	return s.repository.GetByGroup(ctx, groupName)
 }

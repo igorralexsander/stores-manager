@@ -10,4 +10,5 @@ type Store struct {
 	Name       string        `json:"name"`
 	Url        string        `json:"url"`
 	MaxTimeout time.Duration `json:"maxTimeout"`
+	Group      string        `json:"group"`
 }

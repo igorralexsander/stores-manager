@@ -12,6 +12,7 @@ type StoreDB struct {
 	Name       string
 	Url        string
 	MaxTimeout time.Duration
+	Group      string
 }
 
 func (m StoreDB) MapToDomain() *model.Store {
@@ -20,6 +21,7 @@ func (m StoreDB) MapToDomain() *model.Store {
 		Name:       m.Name,
 		Url:        m.Url,
 		MaxTimeout: m.MaxTimeout,
+		Group:      m.Group,
 	}
 }
 
@@ -29,6 +31,7 @@ func FromDomain(domain model.Store) StoreDB {
 		Name:       domain.Name,
 		Url:        domain.Url,
 		MaxTimeout: domain.MaxTimeout,
+		Group:      domain.Group,
 	}
 }
 
