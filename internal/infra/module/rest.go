@@ -2,7 +2,7 @@ package module
 
 import (
 	"github.com/igorralexsander/stores-manager/internal/data/repository"
-	"github.com/igorralexsander/stores-manager/internal/domain/services"
+	"github.com/igorralexsander/stores-manager/internal/domain/store"
 	"github.com/igorralexsander/stores-manager/internal/infra/rest/routes"
 )
 
@@ -15,7 +15,7 @@ func NewRestModule() *Rest {
 	return &Rest{}
 }
 
-func (m *Rest) ProvideStoreRoute(service services.Store) *routes.Store {
+func (m *Rest) ProvideStoreRoute(service store.Service) *routes.Store {
 	if m.storeRoute == nil {
 		m.storeRoute = routes.NewStore(service)
 	}

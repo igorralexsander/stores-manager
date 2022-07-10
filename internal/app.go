@@ -35,8 +35,8 @@ func (a *App) createRoutes() []routes.Base {
 }
 
 func (a *App) provideStoreRoute() *routes.Store {
-	storeService := a.serviceModule.ProvideStoreService()
-	return routes.NewStore(storeService)
+	service := a.serviceModule.ProvideStoreService(a.repositoryModule.ProvideStoreRepository())
+	return routes.NewStore(service)
 }
 
 func (a *App) provideHealthRoute() *routes.Health {

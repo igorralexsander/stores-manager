@@ -6,8 +6,9 @@ import (
 )
 
 type Store struct {
-	ID         uuid.UUID     `json:"id,omitempty"`
+	ID         *uuid.UUID    `json:"id,omitempty"`
 	Name       string        `json:"name"`
 	Url        string        `json:"url"`
 	MaxTimeout time.Duration `json:"maxTimeout"`
+	Group      string        `json:"group"`
 }

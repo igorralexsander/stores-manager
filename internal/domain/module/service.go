@@ -1,18 +1,20 @@
 package module
 
-import "github.com/igorralexsander/stores-manager/internal/domain/services"
+import (
+	"github.com/igorralexsander/stores-manager/internal/domain/store"
+)
 
 type Service struct {
-	storeService services.Store
+	storeService store.Service
 }
 
 func NewServiceModule() *Service {
 	return &Service{}
 }
 
-func (m *Service) ProvideStoreService() services.Store {
+func (m *Service) ProvideStoreService(repository store.Repository) store.Service {
 	if m.storeService == nil {
-		m.storeService = services.NewStoreService()
+		m.storeService = store.NewService(repository)
 	}
 	return m.storeService
 }
