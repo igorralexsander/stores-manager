@@ -12,13 +12,14 @@ type AppConfig struct {
 }
 
 type DatabaseConfig struct {
-	Hosts          []string
-	Port           int
-	ConnectTimeout time.Duration
-	MaxConnections int
-	ReadTimeout    time.Duration
-	KeySpace       string
-	Retries        int
-	User           string
-	Password       string
+	Hosts                    []string
+	Port                     int
+	ConnectTimeout           time.Duration
+	MaxConnections           int
+	ReadTimeout              time.Duration
+	KeySpace                 string
+	Retries                  int
+	DisableInitialHostLookup bool
+	User                     string
+	Password                 string
 }

@@ -16,7 +16,7 @@ func makeClusterConfig(config *config.DatabaseConfig) *gocql.ClusterConfig {
 	clusterConfig.NumConns = config.MaxConnections
 	clusterConfig.Keyspace = config.KeySpace
 	//here, disable driver to get internal ip from docker network
-	clusterConfig.DisableInitialHostLookup = true
+	clusterConfig.DisableInitialHostLookup = config.DisableInitialHostLookup
 	//clusterConfig.Port = config.Port
 	clusterConfig.Consistency = gocql.Quorum
 	clusterConfig.ProtoVersion = 4

@@ -57,14 +57,15 @@ func (cm *configManager) GetServerConfig() *ServerConfig {
 func (cm *configManager) GetDatabaseScyllaConfig() *DatabaseConfig {
 	vipDatabaseConfig := cm.vip.Sub("database").Sub("scylla")
 	return &DatabaseConfig{
-		Hosts:          vipDatabaseConfig.GetStringSlice("hosts"),
-		Port:           vipDatabaseConfig.GetInt("port"),
-		ConnectTimeout: vipDatabaseConfig.GetDuration("connectTimeout") * time.Second,
-		ReadTimeout:    vipDatabaseConfig.GetDuration("readTimeout") * time.Second,
-		KeySpace:       vipDatabaseConfig.GetString("keyspace"),
-		Retries:        vipDatabaseConfig.GetInt("retries"),
-		User:           vipDatabaseConfig.GetString("user"),
-		Password:       vipDatabaseConfig.GetString("password"),
-		MaxConnections: vipDatabaseConfig.GetInt("maxConnections"),
+		Hosts:                    vipDatabaseConfig.GetStringSlice("hosts"),
+		Port:                     vipDatabaseConfig.GetInt("port"),
+		ConnectTimeout:           vipDatabaseConfig.GetDuration("connectTimeout") * time.Second,
+		ReadTimeout:              vipDatabaseConfig.GetDuration("readTimeout") * time.Second,
+		KeySpace:                 vipDatabaseConfig.GetString("keyspace"),
+		Retries:                  vipDatabaseConfig.GetInt("retries"),
+		User:                     vipDatabaseConfig.GetString("user"),
+		Password:                 vipDatabaseConfig.GetString("password"),
+		MaxConnections:           vipDatabaseConfig.GetInt("maxConnections"),
+		DisableInitialHostLookup: vipDatabaseConfig.GetBool("disableInitialHostLookup"),
 	}
 }

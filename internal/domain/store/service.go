@@ -25,16 +25,14 @@ func NewService(repository Repository) *service {
 }
 
 func (s *service) Create(ctx context.Context, store model.Store) error {
-	if store.ID == nil {
-		newId, _ := uuid.NewRandom()
-		store.ID = &newId
+	if !store.HasId() {
+		store.GenerateNewId()
 	}
 	return s.repository.Save(ctx, store)
 }
 
 func (s *service) FindById(ctx context.Context, id uuid.UUID) (*model.Store, error) {
-	store, err := s.repository.GetById(ctx, id)
-	return store, err
+	return s.repository.GetById(ctx, id)
 }
 
 func (s *service) FindAll(ctx context.Context) (model.Stores, error) {
